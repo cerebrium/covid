@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './App.scss';
 import axios from 'axios'
+import CanvasJSReact from './canvasjs.react'
 
 const App = () => {
   const [ washingtonData, setWashingtonData ] = useState([])
@@ -28,7 +29,6 @@ const App = () => {
     };
 
     getData('https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/stats').then( (response) => {
-      console.log(response.data)
       response.data.covid19Stats.forEach( (ele, id) => {
         if (ele.province === 'Washington') {
           localArray.push(ele)
@@ -92,7 +92,6 @@ const App = () => {
 
   // funciton for selecting specific city
   const handleClick = (e, city) => {
-    console.log(city)
     washingtonData.forEach( (ele, id) => {
       if (ele.city === city) {
         setSelectedCity(ele)
@@ -126,6 +125,43 @@ const App = () => {
     cityNames = ''
   }
 
+  const mapChartSeattle = () => {
+    let localArray = []
+    if (stateData) {
+      stateData.forEach( (ele, id) => {
+        localArray.push(
+          { x: new Date(ele.dateChecked), y: ele.positive }
+        )
+      })
+    }
+    return localArray
+  }
+
+  mapChartSeattle()
+
+  var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+  const options = {
+    title:{
+      text: "Seattle Covid-19 Chart"
+      },
+      axisX:{
+        title: "Time ",
+       },
+      axisY:
+      {
+        title: "Positive Tests ",
+      },
+       data: [
+      {
+        type: "line",
+
+        dataPoints: mapChartSeattle()
+      },
+
+    ]
+ }
+
   return (
     <div className="App">
       <div className='title'>
@@ -148,9 +184,12 @@ const App = () => {
         </div>
         <div className='washington_overall_data_container'>
           <h2>Washington Overall Data</h2>
-          <div className='overall_state_stats'>
+          {/* <div className='overall_state_stats'>
             {stateDataDivs}
-          </div>
+          </div> */}
+          <CanvasJSChart options = {options}
+            /* onRef = {ref => this.chart = ref} */
+          />
         </div>
       </div>
     </div>

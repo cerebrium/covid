@@ -125,19 +125,30 @@ const App = () => {
     cityNames = ''
   }
 
-  const mapChartSeattle = () => {
+  const mapChartPositiveIncrease = () => {
+    console.log(stateData)
     let localArray = []
     if (stateData) {
       stateData.forEach( (ele, id) => {
         localArray.push(
-          { x: new Date(ele.dateChecked), y: ele.positive }
+          { x: new Date(ele.dateChecked), y: ele.positiveIncrease }
         )
       })
     }
     return localArray
   }
-
-  mapChartSeattle()
+  const mapChartDeath = () => {
+    console.log(stateData)
+    let localArray = []
+    if (stateData) {
+      stateData.forEach( (ele, id) => {
+        localArray.push(
+          { x: new Date(ele.dateChecked), y: ele.death }
+        )
+      })
+    }
+    return localArray
+  }
 
   var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -145,18 +156,20 @@ const App = () => {
     title:{
       text: "Seattle Covid-19 Chart"
       },
-      axisX:{
-        title: "Time ",
-       },
-      axisY:
-      {
-        title: "Positive Tests ",
-      },
        data: [
       {
         type: "line",
-
-        dataPoints: mapChartSeattle()
+        showInLegend: true, 
+        name: "series1",
+        legendText: "Positive Increase",
+        dataPoints: mapChartPositiveIncrease()
+      },
+      {
+        type: "line",
+        showInLegend: true, 
+        name: "series2",
+        legendText: "Deaths",
+        dataPoints: mapChartDeath()
       },
 
     ]
@@ -170,18 +183,18 @@ const App = () => {
           <h3 className='smaller_text'>{dateSelected.toDateString()}</h3>
         </div>
       </div>
-      <div className='city_list'>
+      {/* <div className='city_list'>
         <div className='city_list_title'>
           Select One
         </div>
         <div className='city_list_inner'>
           {cityNames}
         </div>
-      </div>
+      </div> */}
       <div className='selected_City'>
-        <div className='selected_city_single'>
+        {/* <div className='selected_city_single'>
           {cityList}
-        </div>
+        </div> */}
         <div className='washington_overall_data_container'>
           <h2>Washington Overall Data</h2>
           {/* <div className='overall_state_stats'>

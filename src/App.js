@@ -6,6 +6,8 @@ import CanvasJSReact from './canvasjs.react'
 const App = () => {
   const [ stateData, setStateData ] = useState([])
   const [ dateSelected, setDateSelected ] = useState(new Date())
+  const [ myContent, setMyContent ] = useState(null)
+  const [ selectedArray, setSelectedArray ] = useState([])
 
   useEffect(() => {
       axios.get('https://covidtracking.com/api/states/daily').then( response => {
@@ -17,24 +19,36 @@ const App = () => {
         })
         setStateData(localArrayTwo)
       })
-  }, [])
-
-  const mapChartPositiveIncrease = () => {
-    console.log(stateData)
+    }, [])
+    
+    // positive
+    const mapPositives = () => {
+      console.log(stateData)
+      let localArray = []
+      if (stateData) {
+        stateData.forEach( (ele, id) => {
+          localArray.push(
+            { x: new Date(ele.dateChecked), y: ele.positive }
+          )
+        })
+      }
+    return localArray
+  }
+  // positive increase
+  const mapPositiveIncrease = () => {
     let localArray = []
     if (stateData) {
       stateData.forEach( (ele, id) => {
         localArray.push(
-          { x: new Date(ele.dateChecked), y: ele.positive }
+          { x: new Date(ele.dateChecked), y: ele.positiveIncrease }
         )
       })
     }
     return localArray
   }
 
-
-  const mapChartDeath = () => {
-    console.log(stateData)
+  // negative
+  const mapNegatives = () => {
     let localArray = []
     if (stateData) {
       stateData.forEach( (ele, id) => {
@@ -46,81 +60,112 @@ const App = () => {
     return localArray
   }
 
+  // deaths
+  const mapDeaths = () => {
+    let localArray = []
+    if (stateData) {
+      stateData.forEach( (ele, id) => {
+        localArray.push(
+          { x: new Date(ele.dateChecked), y: ele.death }
+        )
+      })
+    }
+    return localArray
+  }
+
+  const mapHospitalizedCurrently = () => {
+    let localArray = []
+    if (stateData) {
+      stateData.forEach( (ele, id) => {
+        localArray.push(
+          { x: new Date(ele.dateChecked), y: ele.hospitalizedCurrently }
+        )
+      })
+    }
+    return localArray
+  }
+
   var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-  // 
   const options = {
     title:{
       text: "Washington Positive Versus Negative"
       },
-       data: [
-      {
-        type: "line",
-        showInLegend: true, 
-        name: "series1",
-        legendText: "Positives",
-        dataPoints: mapChartPositiveIncrease()
-      },
-      {
-        type: "line",
-        showInLegend: true, 
-        name: "series2",
-        legendText: "negative",
-        dataPoints: mapChartDeath()
-      },
+      data:  [
+        {
+          type: "line",
+          showInLegend: true, 
+          name: "series1",
+          legendText: "Positives"
+        },
+        {
+          type: "line",
+          showInLegend: true, 
+          name: "series2",
+          legendText: "negative"
+        },
+      ]
+    }
 
-    ]
- }
-
- const mapChartDeathsActual = () => {
-  console.log(stateData)
-  let localArray = []
-  if (stateData) {
-    stateData.forEach( (ele, id) => {
-      localArray.push(
-        { x: new Date(ele.dateChecked), y: ele.death }
+  const handleClick = (e, valueEntered) => {
+    let localGate = 0
+    let localArray
+    selectedArray.length > 0 ? localArray = [...selectedArray] : localArray = []
+    localArray.push(`${valueEntered} `)
+    setSelectedArray(localArray)
+    if (localArray.length === 2) {
+      if (localArray[0] === 'deaths ') {
+        options.data[0].dataPoints = mapDeaths()
+        options.data[0].legendText = 'Deaths'
+      }
+      if (localArray[0] === 'hospitalizedCurrently ') {
+        options.data[0].dataPoints = mapHospitalizedCurrently()
+        options.data[0].legendText = 'Hospitalized Currently'
+      }
+      if (localArray[0] === 'positiveTests ') {
+        options.data[0].dataPoints = mapPositives()
+        options.data[0].legendText = 'positive Tests'
+      }
+      if (localArray[0] === 'negativeTests ') {
+        options.data[0].dataPoints = mapNegatives()
+        options.data[0].legendText = 'negative Tests'
+      }
+      if (localArray[0] === 'positiveIncrease ') {
+        options.data[0].dataPoints = mapPositiveIncrease()
+        options.data[0].legendText = 'Positive Increase Rate'
+      }
+      // second section
+      if (valueEntered === 'deaths') {
+        options.data[1].dataPoints = mapDeaths()
+        options.data[1].legendText = 'Deaths'
+      }
+      if (valueEntered === 'positiveTests') {
+        options.data[1].dataPoints = mapPositives()
+        options.data[1].legendText = 'positive Tests'
+      }
+      if (valueEntered === 'hospitalizedCurrently') {
+        options.data[1].dataPoints = mapHospitalizedCurrently()
+        options.data[1].legendText = 'Hospitalized Currently'
+      }
+      if (valueEntered === 'negativeTests') {
+        options.data[1].dataPoints = mapNegatives()
+        options.data[1].legendText = 'negative Tests'
+      }
+      if (valueEntered === 'positiveIncrease') {
+        options.data[1].dataPoints = mapPositiveIncrease()
+        options.data[1].legendText = 'Positive Increase Rate'
+      }
+      localGate = 2
+    }
+    if (localGate > 1) {
+      setMyContent(
+        <CanvasJSChart options = {options}
+                
+      />
       )
-    })
+      setSelectedArray([])
+    }
   }
-  return localArray
-}
-
-
-const mapPositiveIncrease = () => {
-  console.log(stateData)
-  let localArray = []
-  if (stateData) {
-    stateData.forEach( (ele, id) => {
-      localArray.push(
-        { x: new Date(ele.dateChecked), y: ele.positiveIncrease }
-      )
-    })
-  }
-  return localArray
-}
-
-  const optionsTwo = {
-    title:{
-      text: "Deaths versus Change In Positive Results"
-      },
-       data: [
-      {
-        type: "line",
-        showInLegend: true, 
-        name: "series1",
-        legendText: "Deaths",
-        dataPoints: mapChartDeathsActual()
-      },
-      {
-        type: "line",
-        showInLegend: true, 
-        name: "series2",
-        legendText: "Positive Increase",
-        dataPoints: mapPositiveIncrease()
-      },
-
-    ]
- }
 
   return (
     <div className="App">
@@ -132,15 +177,27 @@ const mapPositiveIncrease = () => {
       </div>
       <div className='selected_City'>
         <div className='washington_overall_data_container'>
-          <CanvasJSChart options = {options}
-            /* onRef = {ref => this.chart = ref} */
-          />
-        </div>  
-        <div className='washington_overall_data_container'>
-          <CanvasJSChart options = {optionsTwo}
-            /* onRef = {ref => this.chart = ref} */
-          />
-        </div>
+          {myContent}
+        <div>
+        <h2>Select Two</h2>
+          <h3>Selected: {selectedArray}</h3>
+          <button onClick={(e, valueEntered) => handleClick(e, 'positiveTests')}>
+            Positives Tests
+          </button>
+          <button onClick={(e, valueEntered) => handleClick(e, 'negativeTests')}>
+            Negatives Tests
+          </button>
+          <button onClick={(e, valueEntered) => handleClick(e, 'positiveIncrease')}>
+            Positive Increase in Tests
+          </button>
+          <button onClick={(e, valueEntered) => handleClick(e, 'deaths')}>
+            Deaths
+          </button>
+          <button onClick={(e, valueEntered) => handleClick(e, 'hospitalizedCurrently')}>
+            Hospitalized Currently
+          </button>
+        </div> 
+        </div> 
       </div>
     </div>
   );

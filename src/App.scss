@@ -4,6 +4,7 @@ $off_white: #DCD9E5;
 html, body {
     padding: 0;
     margin: 0;
+    font-family: 'Ubuntu Mono', monospace;
 }
 
 .App {
@@ -44,11 +45,28 @@ html, body {
     display: flex;
     flex-direction: column;
     width: 90vw;
-    padding: 2rem;
+    height: 70vh;
+    margin: 5rem;
 }
 
 .selected_City {
     grid-area: city_content;
+}
+
+button {
+    margin: 2rem;
+    height: 4vh;
+    border-radius: .25rem;
+    border: 1px solid black;
+    background-color: $background_blue;
+    color: $off_white;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 1em;
+}
+
+button:hover {
+    transform: translateY(-.15rem);
+    background-color: rgb(46, 61, 80);
 }
 
 @media only screen and (max-width: 600px) {

@@ -69,6 +69,21 @@ button:hover {
     background-color: rgb(46, 61, 80);
 }
 
-@media only screen and (max-width: 600px) {
 
+@media only screen and (max-width: 600px) {
+    .my_buttons {
+        margin: 2rem;
+        z-index: 1;
+    }
+
+    .selected_City {
+        grid-area: city_content;
+        display: flex;
+        max-width: 100vw;
+    }
+
+    .graph_container {
+        width: 50vw;
+    }
+    
   }

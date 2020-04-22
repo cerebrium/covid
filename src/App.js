@@ -196,8 +196,10 @@ const App = () => {
       </div>
       <div className='selected_City'>
         <div className='washington_overall_data_container'>
-          {myContent}
-        <div>
+          <div className='graph_container'>
+            {myContent}
+          </div>
+        <div className='my_buttons'>
         <h2>Select Two</h2>
           <h3>Selected: {selectedArray}</h3>
           <button onClick={(e, valueEntered) => handleClick(e, 'positiveTests')}>

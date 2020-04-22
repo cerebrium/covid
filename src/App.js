@@ -89,7 +89,7 @@ const App = () => {
 
   const options = {
     title:{
-      text: "Washington Positive Versus Negative"
+      text: "Washington Graph"
       },
       data:  [
         {
@@ -108,8 +108,10 @@ const App = () => {
     }
 
   const handleClick = (e, valueEntered) => {
+    console.log(options)
     let localGate = 0
     let localArray
+    let localString = ''
     selectedArray.length > 0 ? localArray = [...selectedArray] : localArray = []
     localArray.push(`${valueEntered} `)
     setSelectedArray(localArray)
@@ -117,44 +119,61 @@ const App = () => {
       if (localArray[0] === 'deaths ') {
         options.data[0].dataPoints = mapDeaths()
         options.data[0].legendText = 'Deaths'
+        localString += 'Deaths vs '
       }
       if (localArray[0] === 'hospitalizedCurrently ') {
         options.data[0].dataPoints = mapHospitalizedCurrently()
         options.data[0].legendText = 'Hospitalized Currently'
+        localString += 'Hospitalized Currently vs '
       }
       if (localArray[0] === 'positiveTests ') {
         options.data[0].dataPoints = mapPositives()
         options.data[0].legendText = 'positive Tests'
+        localString += 'Positive Tests vs '
       }
       if (localArray[0] === 'negativeTests ') {
         options.data[0].dataPoints = mapNegatives()
         options.data[0].legendText = 'negative Tests'
+        localString += 'Negative Tests vs '
       }
       if (localArray[0] === 'positiveIncrease ') {
         options.data[0].dataPoints = mapPositiveIncrease()
         options.data[0].legendText = 'Positive Increase Rate'
+        localString += 'Positive Increase Rate vs '
       }
+
       // second section
       if (valueEntered === 'deaths') {
         options.data[1].dataPoints = mapDeaths()
         options.data[1].legendText = 'Deaths'
+        localString += 'Deaths'
+        options.title = {text: localString}
       }
       if (valueEntered === 'positiveTests') {
         options.data[1].dataPoints = mapPositives()
-        options.data[1].legendText = 'positive Tests'
+        options.data[1].legendText = 'Positive Tests'
+        localString += 'Positive Tests'
+        options.title = {text: localString}
       }
       if (valueEntered === 'hospitalizedCurrently') {
         options.data[1].dataPoints = mapHospitalizedCurrently()
         options.data[1].legendText = 'Hospitalized Currently'
+        localString += 'Hospitalized Currently'
+        options.title = {text: localString}
       }
       if (valueEntered === 'negativeTests') {
         options.data[1].dataPoints = mapNegatives()
-        options.data[1].legendText = 'negative Tests'
+        options.data[1].legendText = 'Negative Tests'
+        localString += 'Negative Tests'
+        options.title = {text: localString}
       }
       if (valueEntered === 'positiveIncrease') {
         options.data[1].dataPoints = mapPositiveIncrease()
         options.data[1].legendText = 'Positive Increase Rate'
+        localString += 'Positive Increase Rate'
+        options.title = {text: localString}
       }
+      console.log(localString)
       localGate = 2
     }
     if (localGate > 1) {
